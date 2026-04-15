@@ -12,6 +12,8 @@ dependencies = [
     "python-dotenv (>=1.2.1,<2.0.0)"
 ]
 
+[tool.poetry]
+package-mode = false
 
 [tool.repo-template]
 upstream = 'https://github.com/splor-mg/repo-template-python.git'
