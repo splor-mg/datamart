@@ -14,3 +14,11 @@ class FuncionalProgramatica(models.Model):
     programa_desc = models.CharField()
     acao_cod = models.IntegerField()
     acao_desc = models.CharField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['ano','uo_cod', 'acao_cod'],
+                name='unique_ano_uo_acao_cod',
+            )
+        ]

@@ -13,3 +13,11 @@ class UnidadeOrcamentaria(models.Model):
     uo_nome = models.CharField()
     uo_sigla = models.CharField()
     uo_sigla_current = models.CharField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['ano', 'uo_cod'],
+                name='unique_ano_uo_cod',
+            )
+        ]
