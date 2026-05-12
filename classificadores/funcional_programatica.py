@@ -2,7 +2,6 @@ from django.db import models
 
 
 class FuncionalProgramatica(models.Model):
-    pk = models.CompositePrimaryKey('ano', 'uo_cod', 'acao_cod')
     chave_funcional_programatica = models.CharField()
     ano = models.IntegerField()
     uo_cod = models.IntegerField()

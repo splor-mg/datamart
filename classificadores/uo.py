@@ -2,7 +2,6 @@ from django.db import models
 
 
 class UnidadeOrcamentaria(models.Model):
-    pk = models.CompositePrimaryKey('ano', 'uo_cod')
     chave_uo = models.CharField()
     ano = models.IntegerField()
     orgao_vinculacao_cod = models.IntegerField()
