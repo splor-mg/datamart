@@ -7,4 +7,3 @@ class NaturezaDespesa(models.Model):
     grupo_desc = models.CharField()
     categoria_cod = models.IntegerField()
     categoria_desc = models.CharField()
-

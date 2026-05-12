@@ -18,7 +18,7 @@ class FuncionalProgramatica(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['ano','uo_cod', 'acao_cod'],
+                fields=['ano', 'uo_cod', 'acao_cod'],
                 name='unique_ano_uo_acao_cod',
             )
         ]
