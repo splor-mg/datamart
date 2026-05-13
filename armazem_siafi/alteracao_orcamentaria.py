@@ -1,0 +1,26 @@
+from django.db import models
+
+
+class AlteracaoOrcamentaria(models.Model):
+    ano = models.CharField()
+    mes_cod = models.CharField()
+    data_publicacao = models.DateTimeField()
+    data_registro = models.DateTimeField()
+    decreto_num = models.CharField()
+    lei_aprovacao = models.CharField()
+    poder_cod = models.CharField()
+    uo_cod = models.CharField()
+    funcao_cod = models.CharField()
+    programa_cod = models.CharField()
+    acao_cod = models.CharField()
+    grupo_cod = models.CharField()
+    modalidade_cod = models.CharField()
+    iag_cod = models.CharField()
+    fonte_cod = models.CharField()
+    ipu_cod = models.CharField()
+    origem_credito_cod = models.CharField()
+    origem_credito_desc = models.CharField()
+    vlr_suplementacao = models.FloatField()
+    vlr_anulacao = models.FloatField()
+    vlr_credito_inicial = models.FloatField()
+    vlr_credito_autorizado = models.FloatField()

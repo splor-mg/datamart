@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .acao import Acao
 from .elemento_item import ElementoItem
 from .fonte_recurso import FonteRecurso
@@ -11,20 +12,26 @@ from .uo import UnidadeOrcamentaria
 class AcaoAdmin(admin.ModelAdmin):
     pass
 
+
 class ElementoItemAdmin(admin.ModelAdmin):
     pass
+
 
 class FonteRecursoAdmin(admin.ModelAdmin):
     pass
 
+
 class FuncionalProgramaticaAdmin(admin.ModelAdmin):
     pass
+
 
 class NaturezaDespesaAdmin(admin.ModelAdmin):
     pass
 
+
 class NaturezaReceitaAdmin(admin.ModelAdmin):
     pass
+
 
 class UnidadeOrcamentariaAdmin(admin.ModelAdmin):
     pass
