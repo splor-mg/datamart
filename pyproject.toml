@@ -35,7 +35,39 @@ dev = [
 ]
 
 [tool.ruff]
+exclude = [
+    '.bzr',
+    '.direnv',
+    '.eggs',
+    '.git',
+    '.git-rewrite',
+    '.hg',
+    '.ipynb_checkpoints',
+    '.mypy_cache',
+    '.nox',
+    '.pants.d',
+    '.pyenv',
+    '.pytest_cache',
+    '.pytype',
+    '.ruff_cache',
+    '.svn',
+    '.tox',
+    '.venv',
+    '.vscode',
+    '__pypackages__',
+    '_build',
+    'buck-out',
+    'build',
+    'dist',
+    'node_modules',
+    'site-packages',
+    'venv',
+    'migrations'
+]
+
+# Same as PEP8.
 line-length = 79
+indent-width = 4
 
 [tool.ruff.lint]
 preview = true
@@ -44,6 +76,7 @@ select = ['I', 'F', 'E', 'W', 'PL', 'PT']
 [tool.ruff.format]
 preview = true
 quote-style = 'single'
+indent-style = 'space'
 
 [tool.pytest.ini_options]
 pythonpath = '.'
