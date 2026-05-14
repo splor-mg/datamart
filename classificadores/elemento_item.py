@@ -2,9 +2,8 @@ from django.db import models
 
 
 class ElementoItem(models.Model):
-    chave_elemento_item = models.CharField()
-    ano = models.IntegerField()
-    elemento_item_cod = models.IntegerField()
+    ano = models.CharField()
+    elemento_item_cod = models.CharField()
     elemento_item_desc = models.CharField()
 
     class Meta:
