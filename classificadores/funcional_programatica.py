@@ -2,16 +2,15 @@ from django.db import models
 
 
 class FuncionalProgramatica(models.Model):
-    chave_funcional_programatica = models.CharField()
-    ano = models.IntegerField()
-    uo_cod = models.IntegerField()
-    funcao_cod = models.IntegerField()
+    ano = models.CharField()
+    uo_cod = models.CharField()
+    funcao_cod = models.CharField()
     funcao_desc = models.CharField()
-    subfuncao_cod = models.IntegerField()
+    subfuncao_cod = models.CharField()
     subfuncao_desc = models.CharField()
-    programa_cod = models.IntegerField()
+    programa_cod = models.CharField()
     programa_desc = models.CharField()
-    acao_cod = models.IntegerField()
+    acao_cod = models.CharField()
     acao_desc = models.CharField()
 
     class Meta:

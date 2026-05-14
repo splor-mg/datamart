@@ -2,9 +2,8 @@ from django.db import models
 
 
 class Acao(models.Model):
-    chave_acao = models.CharField()
     ano = models.IntegerField()
-    acao_cod = models.IntegerField()
+    acao_cod = models.CharField()
     acao_desc = models.CharField()
 
     class Meta:

@@ -2,9 +2,8 @@ from django.db import models
 
 
 class NaturezaReceita(models.Model):
-    chave_natureza_receita = models.CharField()
-    ano = models.IntegerField()
-    rec_cod = models.IntegerField()
+    ano = models.CharField()
+    rec_cod = models.CharField()
     rec_desc = models.CharField()
 
     class Meta:
