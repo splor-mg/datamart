@@ -1,13 +1,18 @@
 # Laboratório PostgreSQL, Metabase e Giftless
 
-No Easypanel, crie **três App Services independentes**, usando os Dockerfiles
-abaixo no branch `easypanel-labanca`. O projeto Django continua responsável
+Para a implantação atual com **templates do Easypanel**, siga o
+[guia do banco PostgreSQL do Metabase](metabase-postgres-easypanel.md).
+Os templates não executam os scripts dos Dockerfiles deste repositório.
+
+O restante deste documento descreve a alternativa de **três App Services
+independentes**, usando os Dockerfiles no branch `easypanel-labanca`, e o
+Compose para desenvolvimento local. O projeto Django continua responsável
 pelas migrations. O banco `datamart` recebe dados orçamentários; o banco
 `metabase` guarda usuários, perguntas e painéis; Giftless guarda objetos
 Git LFS em volume próprio. Consulte a
 [pesquisa com fontes](easypanel-labanca-contexto.md) para o contexto dos issues.
 
-## Implantar no Easypanel
+## Alternativa: implantar no Easypanel com Dockerfiles
 
 Crie os serviços `postgres`, `metabase` e `giftless` no mesmo projeto. Em
 cada serviço, configure origem Git `https://github.com/splor-mg/datamart`,

@@ -4,8 +4,10 @@
 
 Plataforma centralizada de dados orçamentários de Minas Gerais, focada na consolidação e padronização de dados históricos de orçamento em um único banco PostgreSQL.
 
-Para implantar PostgreSQL, Metabase e Giftless como três App Services no
-Easypanel ou usar o Compose local, veja o [laboratório](docs/easypanel-labanca.md).
+Para usar os templates do Easypanel, veja como configurar o
+[banco PostgreSQL do Metabase](docs/metabase-postgres-easypanel.md).
+Os Dockerfiles independentes e o Compose local estão documentados no
+[laboratório](docs/easypanel-labanca.md).
 
 ## Contexto & Problema
 

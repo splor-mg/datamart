@@ -4,8 +4,10 @@
 
 Centralized budget data platform for Minas Gerais, focused on consolidating and standardizing historical public budget data into a single PostgreSQL database.
 
-To deploy PostgreSQL, Metabase and Giftless as three Easypanel App Services
-or use local Compose, see the [lab guide (Portuguese)](docs/easypanel-labanca.md).
+To use Easypanel templates, see how to configure the
+[Metabase PostgreSQL application database (Portuguese)](docs/metabase-postgres-easypanel.md).
+Independent Dockerfiles and local Compose are documented in the
+[lab guide (Portuguese)](docs/easypanel-labanca.md).
 
 ## Context & Problem
 
