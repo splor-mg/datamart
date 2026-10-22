@@ -4,6 +4,9 @@
 
 Plataforma centralizada de dados orçamentários de Minas Gerais, focada na consolidação e padronização de dados históricos de orçamento em um único banco PostgreSQL.
 
+Para implantar PostgreSQL, Metabase e Giftless como três App Services no
+Easypanel ou usar o Compose local, veja o [laboratório](docs/easypanel-labanca.md).
+
 ## Contexto & Problema
 
 O projeto Datamart da SPLOR foi criado para organizar e unificar os dados orçamentários de Minas Gerais, que atualmente estão distribuídos em múltiplos repositórios e fontes de dados.

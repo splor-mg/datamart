@@ -4,6 +4,9 @@
 
 Centralized budget data platform for Minas Gerais, focused on consolidating and standardizing historical public budget data into a single PostgreSQL database.
 
+To deploy PostgreSQL, Metabase and Giftless as three Easypanel App Services
+or use local Compose, see the [lab guide (Portuguese)](docs/easypanel-labanca.md).
+
 ## Context & Problem
 
 The SPLOR Datamart project was created to organize and unify budget data from Minas Gerais, which is currently distributed across multiple repositories and data sources.

@@ -1,0 +1,22 @@
+# Use junto ao compose.yaml quando PostgreSQL precisar de acesso externo.
+# Os certificados são provisionados pelo operador em .certs/postgres/.
+services:
+  postgres:
+    entrypoint: [/bin/sh, /usr/local/bin/postgres-with-tls.sh]
+    command:
+      - postgres
+      - -c
+      - ssl=on
+      - -c
+      - ssl_cert_file=/run/postgres-tls/server.crt
+      - -c
+      - ssl_key_file=/run/postgres-tls/server.key
+      - -c
+      - hba_file=/etc/postgresql/pg_hba.conf
+    volumes:
+      - ./.certs/postgres:/certificates:ro
+      - ./docker/postgres/with-tls.sh:/usr/local/bin/postgres-with-tls.sh:ro
+      - ./docker/postgres/pg_hba.external.conf:/etc/postgresql/pg_hba.conf:ro
+  metabase:
+    environment:
+      MB_DB_CONNECTION_URI: jdbc:postgresql://postgres:5432/metabase?sslmode=require

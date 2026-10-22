@@ -1,0 +1,26 @@
+LEGACY_ENDPOINTS: false
+AUTH_PROVIDERS:
+  - factory: giftless.auth.jwt:factory
+    options:
+      algorithm: HS256
+      key_id: labanca-client
+PRE_AUTHORIZED_ACTION_PROVIDER:
+  factory: giftless.auth.jwt:factory
+  options:
+    algorithm: HS256
+    key_id: giftless-internal-jwt-key
+    default_lifetime: 900
+TRANSFER_ADAPTERS:
+  basic:
+    factory: giftless.transfer.basic_streaming:factory
+    options:
+      storage_class: giftless.storage.local_storage:LocalStorage
+      storage_options:
+        path: /lfs-storage
+MIDDLEWARE:
+  - class: werkzeug.middleware.proxy_fix:ProxyFix
+    kwargs:
+      x_for: 0
+      x_proto: 1
+      x_host: 1
+      x_port: 1

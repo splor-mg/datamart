@@ -1,0 +1,123 @@
+name: datamart-labanca
+
+services:
+  postgres:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+      DATAMART_PASSWORD: ${DATAMART_PASSWORD:?Defina DATAMART_PASSWORD}
+      METABASE_DB_PASSWORD: ${METABASE_DB_PASSWORD:?Defina METABASE_DB_PASSWORD}
+      METABASE_READER_PASSWORD: ${METABASE_READER_PASSWORD:?Defina METABASE_READER_PASSWORD}
+      TZ: America/Sao_Paulo
+    ports:
+      - "${POSTGRES_BIND_HOST:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init-databases.sh:/docker-entrypoint-initdb.d/10-datamart.sh:ro
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  metabase:
+    image: metabase/metabase:v0.64.1
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_HOST: postgres
+      MB_DB_PORT: "5432"
+      MB_DB_DBNAME: metabase
+      MB_DB_USER: metabase
+      MB_DB_PASS: ${METABASE_DB_PASSWORD:?Defina METABASE_DB_PASSWORD}
+      MB_ENCRYPTION_SECRET_KEY: ${METABASE_ENCRYPTION_SECRET:?Defina METABASE_ENCRYPTION_SECRET}
+      MB_SITE_URL: ${METABASE_SITE_URL:-http://localhost:3000}
+      JAVA_TIMEZONE: America/Sao_Paulo
+      TZ: America/Sao_Paulo
+    ports:
+      - "${HTTP_BIND_HOST:-127.0.0.1}:${METABASE_PORT:-3000}:3000"
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, http://localhost:3000/api/health]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 120s
+
+  giftless:
+    image: ghcr.io/datopian/giftless:v0.6.2
+    platform: linux/amd64
+    restart: unless-stopped
+    command:
+      - --http
+      - 0.0.0.0:8080
+      - -M
+      - -T
+      - --threads
+      - "2"
+      - -p
+      - "2"
+      - --manage-script-name
+      - --callable
+      - app
+      - --buffer-size
+      - "16384"
+      - --disable-logging
+    environment:
+      GIFTLESS_JWT_SECRET: ${GIFTLESS_JWT_SECRET:?Defina GIFTLESS_JWT_SECRET}
+      GIFTLESS_CONFIG_STR: |
+        LEGACY_ENDPOINTS: false
+        AUTH_PROVIDERS:
+          - factory: giftless.auth.jwt:factory
+            options:
+              algorithm: HS256
+              private_key: "${GIFTLESS_JWT_SECRET:?Defina GIFTLESS_JWT_SECRET}"
+              key_id: labanca-client
+        PRE_AUTHORIZED_ACTION_PROVIDER:
+          factory: giftless.auth.jwt:factory
+          options:
+            algorithm: HS256
+            private_key: "${GIFTLESS_INTERNAL_SECRET:?Defina GIFTLESS_INTERNAL_SECRET}"
+            key_id: giftless-internal-jwt-key
+            default_lifetime: 900
+        TRANSFER_ADAPTERS:
+          basic:
+            factory: giftless.transfer.basic_streaming:factory
+            options:
+              storage_class: giftless.storage.local_storage:LocalStorage
+              storage_options:
+                path: /lfs-storage
+        MIDDLEWARE:
+          - class: werkzeug.middleware.proxy_fix:ProxyFix
+            kwargs:
+              x_for: 0
+              x_proto: 1
+              x_host: 1
+              x_port: 1
+      TZ: America/Sao_Paulo
+    ports:
+      - "${HTTP_BIND_HOST:-127.0.0.1}:${GIFTLESS_PORT:-8080}:8080"
+    volumes:
+      - giftless_data:/lfs-storage
+      - ./docker/giftless/create-token.py:/app/create-token.py:ro
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import http.client; c = http.client.HTTPConnection('localhost', 8080, timeout=4); c.request('GET', '/'); assert c.getresponse().status == 404"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  postgres_data:
+  giftless_data:
