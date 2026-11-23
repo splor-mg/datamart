@@ -4,10 +4,10 @@
 
 Plataforma centralizada de dados orçamentários de Minas Gerais, focada na consolidação e padronização de dados históricos de orçamento em um único banco PostgreSQL.
 
-Para usar os templates do Easypanel, veja como configurar o
-[banco PostgreSQL do Metabase](docs/metabase-postgres-easypanel.md).
 O [guia de acesso e agrupamento](docs/easypanel-acesso-e-compose.md) descreve
-as credenciais dos desenvolvedores e o Compose Metabase + PostgreSQL.
+a implantação atual, a administração por SSH e o Compose Metabase + PostgreSQL.
+O [guia do banco PostgreSQL do Metabase](docs/metabase-postgres-easypanel.md)
+descreve a alternativa de dois bancos na mesma instância nativa.
 Os Dockerfiles independentes e o Compose local estão documentados no
 [laboratório](docs/easypanel-labanca.md).
 

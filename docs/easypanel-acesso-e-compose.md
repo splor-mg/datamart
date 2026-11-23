@@ -1,85 +1,70 @@
 # Acesso dos desenvolvedores e agrupamento dos serviços
 
-Proposta preparada em 23/11/2026, antes de alterar os serviços em execução.
+Decisões e implantação iniciadas em 23/11/2026.
 As fontes estão na [pesquisa](easypanel-acesso-contexto.md).
 
-## Acesso de um desenvolvedor e suas ferramentas de IA
+**Status: implantação em andamento.** Estão confirmados o acesso administrativo
+completo às três ferramentas e à VM por SSH, a escolha do cliente/IA pelo
+destinatário e a entrega dos serviços sem carga de dados. Não serão
+fornecidos usuário e senha da interface do Easypanel. Também estão
+confirmados o PostgreSQL interno separado para Metabase e a conta Linux
+com chave SSH e `sudo` sem senha. A manutenção persistente dos serviços
+usará a API/CLI oficial do painel, a validar nesta VM. A administração
+Azure e a recuperação da VM ficam com o operador da plataforma. A chave
+pública do destinatário ainda precisa ser fornecida para instalar seu acesso.
+Veja a [decisão de autonomia administrativa](adr/0001-autonomia-administrativa-do-laboratorio.md)
+e o [vocabulário](../CONTEXT.md).
 
-O desenvolvedor recebe credenciais dos serviços, sem conta de operador do
-Easypanel e sem credenciais administrativas da VM/Docker. A proposta é:
+## Acesso do administrador do laboratório e suas ferramentas de IA
 
-| Serviço | Acesso | Credencial e limite |
+O destinatário terá administração plena das ferramentas e da VM por SSH.
+Não será uma conta limitada a túnel, leitura SQL ou repositórios escolhidos
+pelo operador. Não serão entregues usuário e senha do Easypanel. Isso não
+isola tecnicamente o painel de quem administra a máquina que o hospeda.
+
+| Recurso | Acesso decidido | Credencial ou mecanismo |
 |---|---|---|
-| PostgreSQL analítico | Cliente SQL, através de VPN existente ou túnel SSH restrito | Role individual no `datamart`, com permissões de desenvolvimento combinadas com a equipe |
-| Metabase | Domínio HTTPS, navegador e API | Conta individual e grupo de permissões; para automação, API key vinculada ao grupo |
-| Giftless | Domínio HTTPS, Git LFS e API HTTP | JWT com prazo de validade e scopes limitados ao repositório autorizado |
+| VM do laboratório | Executar comandos e administrar a instalação, inclusive os containers | Conta própria, chave SSH e sudo sem senha |
+| PostgreSQL | Administração da(s) instância(s) do laboratório, bancos, schemas, tabelas e usuários | Conta administrativa própria; comandos também disponíveis através da VM |
+| Metabase | Administrador global e automação administrativa | Conta individual e API key do grupo Administrators |
+| Giftless | Todas as operações LFS suportadas e administração da instalação | JWT amplo para a API; comandos/configurações pela VM |
 
-A chave SSH autentica o túnel. Ela não substitui o usuário SQL, a conta/API
-key do Metabase nem o JWT do Giftless. Os serviços HTTP já dispõem de HTTPS
-pelo proxy do Easypanel, portanto não precisam passar pelo túnel para uso
-normal. O banco de configuração do Metabase é interno e não será entregue
-ao desenvolvedor.
+A escolha de cliente, plataforma ou agente de IA é do administrador.
+A entrega deve permitir execução de comandos e uso das APIs sem depender
+atualmente do operador para cada alteração. O papel do agente não implica
+uma restrição adicional de permissões nas ferramentas.
 
-Se não houver VPN institucional adequada, use uma conta SSH exclusiva para
-port forwarding: sem sudo, shell interativo, acesso ao Docker, painel,
-agent forwarding ou encaminhamento a outros destinos. Cadastre uma chave
-por pessoa/dispositivo, com a chave privada somente no computador do
-usuário. O operador configura `PermitOpen` para o destino SQL permitido,
-`AllowTcpForwarding local` e bloqueia sessões/comandos com `MaxSessions 0`.
-`restrict` em `authorized_keys` sozinho não bloqueia shell. Um trecho a
-adaptar e validar pelo operador no `sshd_config` é:
+Giftless não tem uma API administrativa para todas as operações da
+instalação. No adapter atual existem batch, upload, download e verificação;
+configurações, armazenamento e emissão de tokens dependem de outros
+mecanismos. O script `/app/create-token.py` pode ser executado pelo
+administrador através da VM para emitir um token novo, sem login no painel.
+Não há um endpoint de renovação HTTP implementado nesta preparação.
+Giftless armazena os objetos LFS; o servidor dos commits Git é separado.
 
-```text
-Match User USUARIO_TUNEL
-    AuthenticationMethods publickey
-    PasswordAuthentication no
-    AllowTcpForwarding local
-    AllowStreamLocalForwarding no
-    PermitOpen 127.0.0.1:15432
-    AllowAgentForwarding no
-    X11Forwarding no
-    PermitTTY no
-    PermitTunnel no
-    GatewayPorts no
-    MaxSessions 0
-Match all
-```
+A identidade técnica do Metabase ao conectar ao seu banco interno permanece
+separada da identidade administrativa do destinatário. A instância própria
+para o banco interno foi confirmada no alinhamento.
 
-Isso não cria a conta, publica a porta SQL ou instala a chave. A
-configuração e sua validação ainda pertencem à etapa de implantação.
+Não serão aplicadas as restrições de shell e sudo da proposta anterior.
+Chave SSH e execução de sudo sem senha foram confirmadas. Conectividade e
+procedimentos de atualização persistente dos serviços serão validados antes
+da implantação.
+A documentação operacional precisa distinguir parâmetros gerenciados pelo
+painel de alterações realizadas diretamente nos containers. A API oficial
+do Easypanel oferece operações programáticas com token, inclusive para
+atualizar ambiente e fonte Compose e reimplantar. A compatibilidade da CLI
+com a versão instalada será validada antes de entregar esse mecanismo.
 
-Um exemplo de uso, **depois de preparar o destino restrito na VM**, é:
-
-```sh
-ssh -N -T -o ExitOnForwardFailure=yes \
-  -L 127.0.0.1:15432:127.0.0.1:15432 \
-  -i /caminho/chave_privada USUARIO_TUNEL@HOST_DA_VM
-```
-
-O cliente SQL usa então `127.0.0.1:15432`, com sua credencial individual.
-O servidor SSH precisa alcançar o PostgreSQL em seu próprio
-`127.0.0.1:15432`. Isso ainda não está preparado: o serviço nativo observado
-está sem porta publicada. Não use o DNS Docker
-`datamart_datamart-postgres` como se ele resolvesse no host SSH.
-
-Ao implantar, prefira uma publicação em loopback. Se o serviço nativo só
-permitir publicar em todas as interfaces, prepare antes NSG/firewall para
-impedir acesso externo à porta SQL, permitindo somente o caminho previsto
-da VPN/túnel. Não publique PostgreSQL para a Internet como requisito do
-acesso SSH. Confirme o resultado de dentro e de fora da rede autorizada.
-
-Para IA executada no computador do usuário, use o túnel e os credential
-helpers/variáveis de ambiente locais. Para um agente executado na nuvem,
-é preciso autorizar separadamente sua origem de rede e fornecer credenciais
-limitadas pelo mecanismo de segredos dessa plataforma. Chaves privadas,
-senhas e tokens não entram em prompts, arquivos versionados ou logs. A
-chave de assinatura JWT do Giftless permanece com o operador; o usuário
-recebe apenas tokens emitidos para ele.
+Senhas, chaves privadas e tokens serão mantidos fora do Git e dos prompts.
+A forma de utilizá-los nos clientes/agentes também fica sob responsabilidade
+do administrador, que poderá emitir e administrar suas credenciais.
 
 ## Metabase e seu PostgreSQL em um item Compose
 
-O arquivo [compose.metabase.yaml](../compose.metabase.yaml) agrupa dois
-containers no item `metabase` do projeto Easypanel:
+Conforme a [decisão confirmada](adr/0002-postgresql-interno-do-metabase.md),
+o arquivo [compose.metabase.yaml](../compose.metabase.yaml) agrupa dois
+containers no item `metabase-compose` do projeto Easypanel:
 
 - `metabase`: imagem oficial, HTTP na porta interna `3000`;
 - `postgres`: banco da aplicação, sem porta publicada, com volume próprio
@@ -93,11 +78,13 @@ três itens funcionais, mesmo com dois containers dentro de Metabase.
 
 Antes de implantar o novo item:
 
-1. Confirme a rede Docker compartilhada pelo projeto e pelo proxy.
-   `EASYPANEL_NETWORK` é obrigatório: o nome exato não foi inferido pelo
-   nome do projeto nem confirmado na documentação do Compose do painel.
+1. Use `EASYPANEL_NETWORK=easypanel`, rede overlay attachable confirmada
+   na VM em 23/11/2026. Tanto o proxy quanto o PostgreSQL analítico estão
+   conectados a ela. Confirme novamente se a implantação mudar de VM.
 2. Preencha [docker/metabase/.env.compose.example](../docker/metabase/.env.compose.example)
-   no ambiente do item Compose. Preserve senhas e chave de criptografia
+   no ambiente do item Compose e marque **Create .env file**. Sem essa
+   opção o painel não disponibiliza as variáveis para interpolar o YAML.
+   Preserve senhas e chave de criptografia
    entre deploys; as senhas iniciais são aplicadas apenas ao volume vazio.
 3. Importe o conteúdo de `compose.metabase.yaml` em um item **Compose**.
    Associe o domínio HTTPS existente ao container `metabase`, porta `3000`.
@@ -125,14 +112,129 @@ pode fazer o Docker escolher outro volume, em vez de reutilizar o existente.
 
 ### Validação desta preparação
 
-Em 23/11/2026, `docker compose config` validou a estrutura, as redes e a
-ausência de portas publicadas. O bootstrap foi verificado com shell Bash:
-sintaxe, geração do arquivo de inicialização e passagem do comando
-`postgres` ao entrypoint. Os arquivos de teste temporários foram removidos.
-O engine Docker local não respondeu, portanto os testes de inicialização,
-healthchecks e persistência do novo par de containers ainda precisam ser
-executados antes da implantação. Também falta confirmar a rede do
-Easypanel e validar a importação nessa instalação do painel.
+Em 23/11/2026, o Compose foi importado e implantado na VM pelo Easypanel.
+Foi necessário marcar **Create .env file** na tela Environment para
+resolver as variáveis do YAML. O painel deu sucesso na implantação e
+os dois containers ficaram `healthy`. A API `/api/health` respondeu
+`{"status":"ok"}`; o banco interno apresentou 192 tabelas em `public`.
+A verificação foi repetida após reiniciar o grupo: os dois containers
+voltaram saudáveis e as 192 tabelas permaneceram no volume.
+A role técnica `metabase` não é superusuária. Não há portas publicadas
+nesse par de containers; a aplicação está nas redes privada e `easypanel`.
+
+O volume do banco interno ficou em
+`/var/lib/docker/volumes/datamart_metabase-compose_metabase_db_data/_data`.
+O item App anterior `metabase` foi parado e seu volume H2 preservado.
+Sua rota foi movida para `/previous-h2`, sem apagar dados. O novo domínio
+ainda não foi associado à porta 3000: a publicação foi bloqueada pela
+revisão automática enquanto o primeiro administrador não estiver criado.
+
+No Giftless, foi criado o volume `lfs-storage`, montado em `/lfs-storage`.
+Batch, upload, verify e download pela URL HTTPS passaram com um objeto
+sintético no namespace `splor-mg/datamart-smoke`. O hash desse objeto foi
+conferido após reiniciar o serviço, confirmando a persistência. Não houve carga SIAFI
+ou Linktable. O Metabase privado também respondeu ao healthcheck a partir
+do container Giftless.
+
+### Criar o primeiro administrador antes de publicar
+
+Execute [initialize-admin.py](../docker/metabase/initialize-admin.py)
+em um terminal interativo da VM:
+
+```sh
+python3 docker/metabase/initialize-admin.py
+```
+
+O comando usa `docker exec` para alcançar o Metabase privado. Se o login
+Linux precisar de sudo para acessar Docker, execute com `sudo python3`.
+Ele solicita nome, e-mail e senha; a senha não aparece no terminal, nos
+argumentos dos processos nem no histórico. O administrador executa e
+confirma a criação pessoalmente. O comando recusa execução por pipe,
+recusa URL pública e não altera uma instalação que já concluiu o setup.
+
+Para a primeira configuração pelo painel, uma cópia temporária do script
+foi preparada no container Giftless. Abra a **Console** desse item e rode:
+
+```sh
+python /tmp/initialize-metabase-admin.py \
+  --url http://datamart_metabase-compose-metabase-1:3000
+```
+
+Essa cópia em `/tmp` não é persistente; o arquivo versionado é a referência.
+O script passou em Ruff 0.14.10, validação de sintaxe Python e teste da
+recusa de entrada de credenciais por pipe. A criação da conta continua
+dependendo da execução e confirmação pessoal do administrador.
+Depois da mensagem de sucesso, confira que `setup-token` ficou vazio na
+API de propriedades da sessão. Então associe o domínio HTTPS existente ao
+Compose Service `metabase`, porta `3000`, e entre com a conta criada.
+O item H2 anterior só será excluído definitivamente após confirmação.
+
+### Comandos SQL com a administração SSH
+
+Após instalar a chave pública do destinatário, ele pode entrar na VM:
+
+```sh
+ssh -i /caminho/chave-privada datamart-admin@191.235.104.187
+PG_CONTAINER="$(sudo docker ps -q \
+  --filter label=com.docker.swarm.service.name=datamart_datamart-postgres)"
+sudo docker exec -it "$PG_CONTAINER" psql -U postgres -d datamart
+```
+
+Isso permite administrar bancos, schemas e roles sem abrir PostgreSQL
+na Internet. O administrador também pode executar scripts SQL com
+`docker exec -i` e usar os comandos por um agente remoto. Para uma GUI
+SQL local, valide um destino privado alcançável pela VM antes de configurar
+um túnel; os nomes DNS dos containers não são automaticamente resolvidos
+pelo host. A chave SSH autentica a VM, não substitui login HTTP do Metabase
+ou autenticação Git LFS.
+
+### CLI oficial do Easypanel
+
+A [CLI oficial](https://easypanel.io/docs/cli) foi instalada na VM em
+`/usr/local/bin`, pelos comandos abaixo. O instalador verificou o checksum
+SHA-256 do binário. A versão conferida foi `0.1.4`.
+
+```sh
+curl -fsSL https://get.easypanel.io/cli | sh
+easypanel version
+```
+
+O Azure Run Command executa sem um contexto de login completo. A CLI
+precisa de um diretório de usuário; sua execução foi validada por
+`sudo -H -u aidadmin easypanel version`. Em uma sessão SSH normal, use a
+conta Linux que receberá a administração.
+
+A conexão autenticada ainda está pendente: o binário instalado não implica
+que uma API key ou o manifesto de comandos do servidor estejam validados.
+Na entrega, configure um perfil com a API key autorizada, sem registrar o
+token no Git ou no chat:
+
+```sh
+easypanel server add datamart-lab https://h0ydxp.easypanel.host
+easypanel server check datamart-lab
+easypanel projects list --format json
+easypanel --help
+```
+
+O primeiro comando solicita a chave sem exibi-la. Conforme a documentação,
+a CLI usa Secret Service no Linux para guardar credenciais; confira a
+disponibilidade desse mecanismo na VM headless. Para automação, a CLI
+também aceita `EASYPANEL_API_KEY` no ambiente do processo. Use um arquivo
+protegido/gerenciador de segredos, sem incluir o valor no comando ou prompt
+do agente. Os comandos de gestão são fornecidos pelo servidor; confirme
+os nomes com `--help` antes de criar scripts de deploy.
+
+### Pendências para concluir a entrega
+
+- Receber a chave pública e criar o login `datamart-admin`, com chave SSH
+  e sudo sem senha, conforme decidido. `ssh.socket` está ativo na porta 22;
+  o acesso externo e a autenticação da nova conta ainda não foram testados.
+- Concluir pessoalmente o assistente privado do administrador Metabase e
+  só então associar o domínio HTTPS existente ao container `metabase:3000`.
+- Configurar e validar a autenticação da CLI/API para manutenção persistente.
+- Excluir o item App H2 anterior após validar a troca e confirmar a exclusão.
+- Entregar os comandos e credenciais do laboratório por canal privado.
+  A carga e a organização dos dados ficarão a cargo do destinatário.
 
 ## Origem dos schemas do Datamart
 
@@ -148,8 +250,9 @@ PostgreSQL nem das migrations Django atuais. O script
 `docker/postgres/init-databases.sh` criou esses schemas como uma escolha de
 implementação do laboratório. Os templates nativos não executaram esse
 script. Na conferência de 23/11/2026, o banco `datamart` tinha `public` com
-zero tabelas e não tinha os dois schemas. A estrutura deve ser confirmada
-com o pipeline/dataset selecionado antes de criá-la e carregar dados.
+zero tabelas e não tinha os dois schemas. A estrutura e a carga dos dados
+ficarão a cargo do administrador do laboratório; a entrega atual não inclui
+carga SIAFI, Linktable ou implantação de um pipeline analítico.
 
 ## Como considerar o backup Azure existente
 
@@ -160,10 +263,27 @@ nível de sistema de arquivos também pode permitir recuperação PostgreSQL
 com seus arquivos de dados e WAL completos; o teste de restauração é o que
 confirma a recuperabilidade desse ambiente.
 
-Confirme os caminhos de Docker/volumes, dados PostgreSQL e WAL no host,
-incluindo se algo está em disco temporário ou armazenamento externo. A
-persistência em volume continua necessária mesmo com backup da VM.
-Defina o RPO/RTO esperado e teste a restauração em ambiente isolado, sem
-substituir a VM em uso. Dumps SQL ou backup PostgreSQL/PITR são complementos
+Na VM `vm-aid-runtime-dev`, o backup estava habilitado no vault
+`rsv-aid-prd`, política `policy-vm-daily (Enhanced)`, com todos os discos
+incluídos. A última execução consultada foi bem-sucedida em 23/11/2026;
+havia 30 pontos consistentes em nível de sistema de arquivos.
+
+Foram conferidos Docker data-root `/var/lib/docker` e os mounts:
+
+| Dados | Caminho persistente na VM |
+|---|---|
+| PostgreSQL analítico | `/etc/easypanel/projects/datamart/datamart-postgres/data` |
+| PostgreSQL do Metabase | `/var/lib/docker/volumes/datamart_metabase-compose_metabase_db_data/_data` |
+| Giftless | `/var/lib/docker/volumes/datamart_giftless_lfs-storage/_data` |
+| H2 anterior, preservado | `/var/lib/docker/volumes/datamart_metabase_data/_data` |
+
+Esses caminhos ficam no disco de SO `/dev/root`, não no disco temporário
+Azure. O backup da VM cobre esse disco; os volumes recém-criados entrarão
+nos próximos snapshots. A persistência continua necessária mesmo com
+backup da VM. Não foi criado recurso Azure adicional nesta implantação.
+As metas confirmadas são RPO de até 24 horas de perda de dados e RTO de
+até um dia útil de recuperação. São metas a validar com o backup existente,
+e não garantias já demonstradas. Teste a restauração em ambiente isolado,
+sem substituir a VM em uso. Dumps SQL ou backup PostgreSQL/PITR são complementos
 para recuperação granular ou RPO menor; não são uma duplicação obrigatória
 apenas porque o painel mostra uma lista vazia de backups.

@@ -1,8 +1,12 @@
 # Laboratório PostgreSQL, Metabase e Giftless
 
-Para a implantação atual com **templates do Easypanel**, siga o
-[guia do banco PostgreSQL do Metabase](metabase-postgres-easypanel.md).
-Os templates não executam os scripts dos Dockerfiles deste repositório.
+Para a implantação atual, siga o
+[guia de acesso e Compose](easypanel-acesso-e-compose.md): PostgreSQL
+analítico nativo do Easypanel, Metabase + banco interno em Compose e
+Giftless por Dockerfile. O
+[guia de dois bancos na mesma instância](metabase-postgres-easypanel.md)
+descreve uma alternativa anterior. Templates nativos não executam os
+scripts dos Dockerfiles deste repositório.
 
 O restante deste documento descreve a alternativa de **três App Services
 independentes**, usando os Dockerfiles no branch `easypanel-labanca`, e o

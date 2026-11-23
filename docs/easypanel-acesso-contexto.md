@@ -1,5 +1,10 @@
 # Fontes para acesso, schemas e backup do laboratório
 
+O acesso limitado descrito nesta pesquisa foi substituído pela
+[decisão de administração completa](adr/0001-autonomia-administrativa-do-laboratorio.md).
+Use o [guia operacional atual](easypanel-acesso-e-compose.md) para implantar.
+As fontes e a distinção entre requisito e proposta continuam como referência.
+
 Pesquisa em 23/11/2026. Este registro fundamenta a proposta de acesso e
 separa requisitos dos projetos, escolhas de implementação e verificações
 que ainda dependem do ambiente. Não houve criação de contas, concessão de

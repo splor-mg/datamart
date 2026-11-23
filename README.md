@@ -4,10 +4,10 @@
 
 Centralized budget data platform for Minas Gerais, focused on consolidating and standardizing historical public budget data into a single PostgreSQL database.
 
-To use Easypanel templates, see how to configure the
-[Metabase PostgreSQL application database (Portuguese)](docs/metabase-postgres-easypanel.md).
 The [access and grouping guide (Portuguese)](docs/easypanel-acesso-e-compose.md)
-describes developer credentials and the Metabase + PostgreSQL Compose.
+describes the current deployment, SSH administration, and Metabase + PostgreSQL Compose.
+The [application database guide (Portuguese)](docs/metabase-postgres-easypanel.md)
+documents the alternative using two databases in one native PostgreSQL instance.
 Independent Dockerfiles and local Compose are documented in the
 [lab guide (Portuguese)](docs/easypanel-labanca.md).
 
