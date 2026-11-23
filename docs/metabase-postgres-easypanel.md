@@ -7,8 +7,12 @@ PostgreSQL para o banco da aplicação em produção.
 
 A implantação escolhida usa os templates do Easypanel. É possível
 reutilizar o PostgreSQL que já está rodando: basta criar nele um banco e
-uma role exclusivos para o Metabase. Não é necessário outro container
-PostgreSQL nem um novo Compose. Esse banco é separado dos dados
+uma role exclusivos para o Metabase. Essa opção dispensa outro container.
+Para a preferência posterior de agrupar Metabase com seu próprio banco em
+um item Compose, veja o [guia de acesso e agrupamento](easypanel-acesso-e-compose.md)
+e o arquivo [compose.metabase.yaml](../compose.metabase.yaml).
+O restante deste documento descreve a opção de reutilizar o PostgreSQL
+existente, sem mudar o tipo do item no painel. Esse banco é separado dos dados
 orçamentários que serão cadastrados como fonte analítica na interface.
 
 As variáveis abaixo são para o **template / imagem oficial**. O
