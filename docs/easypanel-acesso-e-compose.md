@@ -12,6 +12,10 @@ com chave SSH e `sudo` sem senha. A manutenção persistente dos serviços
 usará a API/CLI oficial do painel, a validar nesta VM. A administração
 Azure e a recuperação da VM ficam com o operador da plataforma. A chave
 pública do destinatário ainda precisa ser fornecida para instalar seu acesso.
+A conectividade SSH pela CAMG foi resolvida no projeto `azure-migration`,
+com TCP/22 autorizado para a saída pública do proxy corporativo. O
+[procedimento de acesso](acesso-ssh-camg.md) registra a regra aplicada,
+o comando de conexão e o teste pela VPN que ainda está pendente.
 Veja a [decisão de autonomia administrativa](adr/0001-autonomia-administrativa-do-laboratorio.md)
 e o [vocabulário](../CONTEXT.md).
 
@@ -171,10 +175,10 @@ O item H2 anterior só será excluído definitivamente após confirmação.
 
 ### Comandos SQL com a administração SSH
 
-Após instalar a chave pública do destinatário, ele pode entrar na VM:
+Entre na VM pelo [proxy da CAMG](acesso-ssh-camg.md), usando sua conta
+Linux e chave autorizadas. Na sessão SSH, execute:
 
 ```sh
-ssh -i /caminho/chave-privada datamart-admin@191.235.104.187
 PG_CONTAINER="$(sudo docker ps -q \
   --filter label=com.docker.swarm.service.name=datamart_datamart-postgres)"
 sudo docker exec -it "$PG_CONTAINER" psql -U postgres -d datamart
@@ -227,8 +231,9 @@ os nomes com `--help` antes de criar scripts de deploy.
 ### Pendências para concluir a entrega
 
 - Receber a chave pública e criar o login `datamart-admin`, com chave SSH
-  e sudo sem senha, conforme decidido. `ssh.socket` está ativo na porta 22;
-  o acesso externo e a autenticação da nova conta ainda não foram testados.
+  e sudo sem senha, conforme decidido. A conectividade pela CAMG como
+  `aidadmin` foi confirmada no `azure-migration`; falta testar a conta
+  do destinatário. O acesso pela VPN de casa também está pendente.
 - Concluir pessoalmente o assistente privado do administrador Metabase e
   só então associar o domínio HTTPS existente ao container `metabase:3000`.
 - Configurar e validar a autenticação da CLI/API para manutenção persistente.

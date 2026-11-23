@@ -15,6 +15,13 @@ com `sudo` sem solicitar senha, conforme confirmado na rodada seguinte.
 Isso permite execução administrativa não interativa pelas automações
 escolhidas pelo destinatário.
 
+A conectividade SSH usa o proxy corporativo da CAMG, alcançado pela rede
+corporativa ou pela VPN existente. O NSG permite TCP/22 da saída pública
+`200.198.60.112/32`. A aplicação e a confirmação do login administrativo
+atual estão registradas no projeto `azure-migration`; veja o
+[procedimento do laboratório](../acesso-ssh-camg.md). Essa regra de rede
+preserva a administração completa após a autenticação na VM.
+
 Optamos por essa autonomia em vez de conceder somente acesso às APIs e
 um túnel SQL, que exigiriam intervenção do operador para administrar a
 instalação. A concessão efetiva depende de receber e instalar a chave
