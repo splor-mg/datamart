@@ -67,8 +67,11 @@ services:
     expose:
       - "3000"
     networks:
-      - application_db
-      - easypanel
+      application_db: {}
+      easypanel:
+        # O proxy do item Compose usa este alias, não o nome do container.
+        aliases:
+          - ${METABASE_PROXY_ALIAS:-datamart_metabase-compose_metabase}
     healthcheck:
       test: [CMD, curl, --fail, --silent, http://localhost:3000/api/health]
       interval: 15s

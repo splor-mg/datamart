@@ -20,10 +20,15 @@ persistida no Bicep e conferida no NSG da subnet dev. O responsável
 confirmou uma sessão SSH interativa pela CAMG como `aidadmin`. O acesso
 pela VPN de casa ainda precisa ser validado.
 
-O login acima é o administrativo atual. A conta própria do destinatário,
-proposta como `datamart-admin`, e sua chave pública ainda precisam ser
-instaladas e testadas. O acesso administrativo completo e `sudo` sem senha
-seguem a [decisão do laboratório](adr/0001-autonomia-administrativa-do-laboratorio.md).
+O login administrativo existente é `aidadmin`. A conta `datamart-admin`
+foi criada em 23/11/2026, com a chave pública fornecida pelo responsável:
+`SHA256:HDb9ELZoNI1Mp9R62k7A+TXw24yAF/jsobpZyB8ObLU` (ED25519).
+Foram validados UID 1001, execução de sudo sem senha como root e a
+configuração efetiva SSH: chave pública habilitada, senha e autenticação
+interativa desabilitadas, shell/TTY e encaminhamento TCP permitidos.
+O login externo dessa conta ainda precisa ser conferido com a chave privada
+correspondente. O acesso administrativo completo segue a
+[decisão do laboratório](adr/0001-autonomia-administrativa-do-laboratorio.md).
 
 ## Conectar pelo Git Bash
 
