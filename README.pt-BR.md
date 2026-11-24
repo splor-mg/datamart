@@ -6,6 +6,8 @@ Plataforma centralizada de dados orçamentários de Minas Gerais, focada na cons
 
 O [guia de entrega e operação](docs/operacao-laboratorio.md) reúne endereços,
 credenciais, conexão SQL, APIs e comandos para o administrador ou seu agente.
+O [inventário de credenciais](docs/credenciais-laboratorio.md) identifica
+as senhas, chaves e tokens necessários e o que repassar ao destinatário.
 O [guia de acesso e agrupamento](docs/easypanel-acesso-e-compose.md) descreve
 a implantação atual, a administração por SSH e o Compose Metabase + PostgreSQL.
 O [guia do banco PostgreSQL do Metabase](docs/metabase-postgres-easypanel.md)

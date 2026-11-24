@@ -35,6 +35,10 @@ o banco interno do Metabase é PostgreSQL.
 
 ## Credenciais e strings de conexão
 
+O [inventário de senhas, chaves e tokens](credenciais-laboratorio.md)
+resume o que o responsável precisa entregar e onde cada credencial está
+disponível, incluindo a senha Metabase guardada no `.env` local.
+
 Na sessão SSH de `datamart-admin`, o arquivo consolidado fica em:
 
 ```text

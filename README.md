@@ -6,6 +6,8 @@ Centralized budget data platform for Minas Gerais, focused on consolidating and 
 
 The [handoff and operations guide (Portuguese)](docs/operacao-laboratorio.md)
 compiles endpoints, credential locations, SQL connections, APIs, and admin commands.
+The [credential inventory (Portuguese)](docs/credenciais-laboratorio.md)
+lists required passwords, keys, tokens, and recipient handoff steps.
 The [access and grouping guide (Portuguese)](docs/easypanel-acesso-e-compose.md)
 describes the current deployment, SSH administration, and Metabase + PostgreSQL Compose.
 The [application database guide (Portuguese)](docs/metabase-postgres-easypanel.md)
