@@ -4,6 +4,8 @@
 
 Centralized budget data platform for Minas Gerais, focused on consolidating and standardizing historical public budget data into a single PostgreSQL database.
 
+The [handoff and operations guide (Portuguese)](docs/operacao-laboratorio.md)
+compiles endpoints, credential locations, SQL connections, APIs, and admin commands.
 The [access and grouping guide (Portuguese)](docs/easypanel-acesso-e-compose.md)
 describes the current deployment, SSH administration, and Metabase + PostgreSQL Compose.
 The [application database guide (Portuguese)](docs/metabase-postgres-easypanel.md)

@@ -1,15 +1,19 @@
 # Acesso dos desenvolvedores e agrupamento dos serviços
 
-Decisões e implantação iniciadas em 23/11/2026.
+Decisões e implantação concluídas em 23/11/2026.
 As fontes estão na [pesquisa](easypanel-acesso-contexto.md).
 
-**Status: implantação em andamento.** Estão confirmados o acesso administrativo
+O [guia de entrega e operação](operacao-laboratorio.md) reúne os endereços,
+as strings de conexão, os arquivos privados de credenciais e os comandos
+para o destinatário e sua ferramenta de IA.
+
+**Status: serviços configurados.** Estão confirmados o acesso administrativo
 completo às três ferramentas e à VM por SSH, a escolha do cliente/IA pelo
 destinatário e a entrega dos serviços sem carga de dados. Não serão
 fornecidos usuário e senha da interface do Easypanel. Também estão
 confirmados o PostgreSQL interno separado para Metabase e a conta Linux
 com chave SSH e `sudo` sem senha. A manutenção persistente dos serviços
-usará a API/CLI oficial do painel, a validar nesta VM. A administração
+usa a API/CLI oficial do painel, validada nesta VM. A administração
 Azure e a recuperação da VM ficam com o operador da plataforma. A conta
 `datamart-admin` já foi criada com a chave pública fornecida, conforme o
 [guia SSH](acesso-ssh-camg.md).
@@ -52,14 +56,13 @@ separada da identidade administrativa do destinatário. A instância própria
 para o banco interno foi confirmada no alinhamento.
 
 Não serão aplicadas as restrições de shell e sudo da proposta anterior.
-Chave SSH e execução de sudo sem senha foram confirmadas. Conectividade e
-procedimentos de atualização persistente dos serviços serão validados antes
-da implantação.
+Chave SSH e execução de sudo sem senha foram confirmadas. Os procedimentos
+de atualização persistente dos serviços foram validados com a CLI.
 A documentação operacional precisa distinguir parâmetros gerenciados pelo
 painel de alterações realizadas diretamente nos containers. A API oficial
 do Easypanel oferece operações programáticas com token, inclusive para
 atualizar ambiente e fonte Compose e reimplantar. A compatibilidade da CLI
-com a versão instalada será validada antes de entregar esse mecanismo.
+com a versão instalada foi validada nesta entrega.
 
 Senhas, chaves privadas e tokens serão mantidos fora do Git e dos prompts.
 A forma de utilizá-los nos clientes/agentes também fica sob responsabilidade
@@ -133,8 +136,9 @@ nesse par de containers; a aplicação está nas redes privada e `easypanel`.
 
 O volume do banco interno ficou em
 `/var/lib/docker/volumes/datamart_metabase-compose_metabase_db_data/_data`.
-O item App anterior `metabase` foi parado e seu volume H2 preservado.
-Sua rota foi movida para `/previous-h2`. Depois da criação do administrador
+O item App anterior `metabase` foi parado e, após autorização, removido.
+Seu volume H2 e os arquivos de recuperação foram preservados.
+Depois da criação do administrador
 e do encerramento do setup, o domínio
 `https://datamart-metabase.h0ydxp.easypanel.host` foi associado ao container
 `metabase`, porta 3000. Foi adicionado o alias Docker exigido pelo proxy,
@@ -173,12 +177,12 @@ python /tmp/initialize-metabase-admin.py \
 
 Essa cópia em `/tmp` não é persistente; o arquivo versionado é a referência.
 O script passou em Ruff 0.14.10, validação de sintaxe Python e teste da
-recusa de entrada de credenciais por pipe. A criação da conta continua
-dependendo da execução e confirmação pessoal do administrador.
+recusa de entrada de credenciais por pipe. A conta global já foi criada
+pessoalmente pelo responsável; o procedimento serve para uma instalação nova.
 Depois da mensagem de sucesso, confira que `setup-token` ficou vazio na
 API de propriedades da sessão. Então associe o domínio HTTPS existente ao
 Compose Service `metabase`, porta `3000`, e entre com a conta criada.
-O item H2 anterior só será excluído definitivamente após confirmação.
+O item H2 anterior foi excluído após confirmação, preservando seu volume.
 
 ### Comandos SQL com a administração SSH
 
@@ -206,6 +210,11 @@ tabelas. Sua senha está somente no arquivo privado
 `/home/datamart-admin/.config/datamart/postgres-analytics.json`, modo 600.
 A sessão SSH administrativa permite usar o superusuário `postgres` para
 gerir a instância inteira, além dessa identidade técnica da conexão.
+As credenciais administrativas e as URIs para túnel SSH estão compiladas em
+`/home/datamart-admin/.config/datamart/acessos.json`, modo 600. O auxiliar
+`lab-postgres-tunnel-target` descobre o endereço privado alcançável pela VM;
+o [guia operacional](operacao-laboratorio.md#cliente-sql-local-por-túnel-ssh)
+contém o comando completo para clientes SQL externos.
 
 ### CLI oficial do Easypanel
 
@@ -245,19 +254,26 @@ protegido/gerenciador de segredos, sem incluir o valor no comando ou prompt
 do agente. Os comandos de gestão são fornecidos pelo servidor; confirme
 os nomes com `--help` antes de criar scripts de deploy.
 
-### Pendências para concluir a entrega
+### Resultado e conferência do destinatário
+
+A fonte `Datamart` (ID 2, PostgreSQL) foi salva no Metabase. A API key
+`Laboratorio - automacao`, do grupo `Administrators`, foi criada e gravada
+em arquivo privado na VM. O perfil CLI final `datamart-lab` foi registrado
+para `datamart-admin` com um novo token administrativo da dev; o anterior
+foi substituído. O App H2 antigo foi removido e seu volume preservado,
+com cópia de recuperação em
+`/etc/datamart/archives/metabase-h2-20261123T220047Z`.
+
+Os comandos `lab-easypanel`, `lab-postgres`, `lab-giftless-token`,
+`lab-postgres-tunnel-target`, `lab-metabase-api` e `lab-connection-info`
+estão instalados. O [guia de operação](operacao-laboratorio.md) descreve
+seu uso e os arquivos protegidos.
 
 - Validar externamente o login `datamart-admin` com a chave privada
   correspondente à pública instalada. A conectividade CAMG está confirmada;
   o acesso pela VPN de casa também está pendente.
-- Salvar a conexão analítica e criar a chave de automação administrativa
-  Metabase após a confirmação das ações preparadas.
-- Registrar o perfil final da CLI para `datamart-admin`, com token próprio
-  da dev e armazenamento protegido em arquivo.
-- Excluir o App H2 anterior após confirmar a exclusão. Seu volume e uma
-  cópia de recuperação devem ser preservados; o arquivo H2 e a configuração
-  foram arquivados em `/etc/datamart/archives/metabase-h2-20261123T220047Z`.
-- Entregar os comandos e credenciais do laboratório por canal privado.
+- Entregar a senha Metabase definida pelo responsável por canal privado,
+  junto da referência aos arquivos protegidos de credenciais na VM.
   A carga e a organização dos dados ficarão a cargo do destinatário.
 
 ## Origem dos schemas do Datamart

@@ -4,6 +4,8 @@
 
 Plataforma centralizada de dados orçamentários de Minas Gerais, focada na consolidação e padronização de dados históricos de orçamento em um único banco PostgreSQL.
 
+O [guia de entrega e operação](docs/operacao-laboratorio.md) reúne endereços,
+credenciais, conexão SQL, APIs e comandos para o administrador ou seu agente.
 O [guia de acesso e agrupamento](docs/easypanel-acesso-e-compose.md) descreve
 a implantação atual, a administração por SSH e o Compose Metabase + PostgreSQL.
 O [guia do banco PostgreSQL do Metabase](docs/metabase-postgres-easypanel.md)
