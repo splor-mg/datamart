@@ -28,7 +28,8 @@ credenciais HTTP próprias.
 
 A instalação Metabase chama-se **Datamart SPLOR**. A conta global criada
 pelo responsável é `raiane.souza@planejamento.mg.gov.br`; a senha foi
-definida pessoalmente e deve ser entregue pelo responsável por canal privado.
+definida pessoalmente. Em 24/11/2026, o responsável confirmou seu repasse
+à destinatária por canal privado.
 O banco analítico aparece no Metabase como **Datamart**, ID `2`.
 A fonte **Sample Database** é a demonstração SQLite incluída no produto;
 o banco interno do Metabase é PostgreSQL.
@@ -36,7 +37,7 @@ o banco interno do Metabase é PostgreSQL.
 ## Credenciais e strings de conexão
 
 O [inventário de senhas, chaves e tokens](credenciais-laboratorio.md)
-resume o que o responsável precisa entregar e onde cada credencial está
+resume a entrega e onde cada credencial está
 disponível, incluindo a senha Metabase guardada no `.env` local.
 
 Na sessão SSH de `datamart-admin`, o arquivo consolidado fica em:
@@ -291,8 +292,9 @@ amplo. Batch/upload/verify/download LFS e persistência do objeto sintético
 foram testados durante a implantação. Os arquivos de credenciais estão com
 modo `600` e proprietário `datamart-admin`.
 
-Restam a conferência externa do login/túnel com a chave correspondente,
-o teste pela VPN fora da CAMG e a entrega privada da senha Metabase escolhida
-pelo responsável. A carga e organização dos dados ficam com o destinatário.
+Restam a conferência externa do login/túnel com a chave correspondente
+e o teste pela VPN fora da CAMG. O repasse privado da senha Metabase foi
+confirmado pelo responsável em 24/11/2026. A carga e organização dos dados
+ficam com o destinatário.
 O banco analítico foi entregue sem tabelas de negócio; o objeto LFS de
 validação usa o namespace `splor-mg/datamart-smoke`.

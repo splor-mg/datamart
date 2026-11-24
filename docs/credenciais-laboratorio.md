@@ -19,7 +19,7 @@ Os caminhos iniciados por `~` nesta tabela pertencem à conta Linux
 
 | Acesso | Credencial | Onde está disponível hoje |
 |---|---|---|
-| Metabase web | E-mail e senha da conta global | O responsável guardou no `.env` do repositório em sua máquina local, nas variáveis `METABASE_ADMIN_USERNAME` e `METABASE_ADMIN_PASSWORD`. Deve repassá-los por canal privado. |
+| Metabase web | E-mail e senha da conta global | O responsável guardou no `.env` local, nas variáveis `METABASE_ADMIN_USERNAME` e `METABASE_ADMIN_PASSWORD`. O repasse da senha por canal privado foi confirmado em 24/11/2026. |
 | Metabase por API/IA | API key administrativa, grupo `Administrators` | Na VM: `~/.config/datamart/metabase-api-key.json`. Também consta em `acessos.json`. |
 | PostgreSQL analítico em cliente SQL | Usuário `postgres` e senha de superusuário | Na VM: `~/.config/datamart/postgres-admin.json`. As URIs completas estão em `acessos.json`. Use o túnel SSH descrito no guia. |
 | Giftless / Git LFS | JWT usado como senha pelo cliente LFS | O administrador gera pela VM com `lab-giftless-token`; não depende de uma senha fixa nem do login no painel. |
@@ -109,10 +109,11 @@ Clientes que utilizavam o token anterior precisam atualizar sua credencial.
 Ao trocar senhas ou segredos, atualize também os serviços dependentes e
 os arquivos privados de acesso.
 
-## O que o responsável precisa entregar
+## Entrega e conferências
 
 1. Os links desta página e do [guia de operação](operacao-laboratorio.md).
-2. E-mail e senha Metabase, por canal privado.
+2. Senha Metabase: repasse por canal privado confirmado pelo responsável
+   em 24/11/2026. O e-mail da conta está no guia de operação.
 3. Acesso SSH: a chave pública da destinatária já está autorizada. Ela mantém
    sua própria chave privada; não deve enviá-la ao responsável.
 4. Confirmação de que o destinatário dispõe das credenciais corporativas

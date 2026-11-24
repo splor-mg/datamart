@@ -274,9 +274,11 @@ seu uso e os arquivos protegidos.
 - Validar externamente o login `datamart-admin` com a chave privada
   correspondente à pública instalada. A conectividade CAMG está confirmada;
   o acesso pela VPN de casa também está pendente.
-- Entregar a senha Metabase definida pelo responsável por canal privado,
-  junto da referência aos arquivos protegidos de credenciais na VM.
-  A carga e a organização dos dados ficarão a cargo do destinatário.
+
+Em 24/11/2026, o responsável confirmou que a senha Metabase já foi
+repassada por canal privado. As demais credenciais estão nos arquivos
+protegidos da VM. A carga e a organização dos dados ficarão a cargo do
+destinatário.
 
 ## Origem dos schemas do Datamart
 
