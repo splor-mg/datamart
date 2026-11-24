@@ -30,6 +30,14 @@ O login externo dessa conta ainda precisa ser conferido com a chave privada
 correspondente. O acesso administrativo completo segue a
 [decisão do laboratório](adr/0001-autonomia-administrativa-do-laboratorio.md).
 
+Em 24/11/2026, a chave pública ED25519 enviada pela destinatária também
+foi autorizada para `datamart-admin`, preservando a chave do responsável.
+Fingerprint da chave da destinatária:
+`SHA256:QovQRNOR9OGoAZJZzCrMyrsWvLa6p/+inpMWtiUhizk`.
+Ela deve usar seu arquivo privado `id_ed25519`, que permanece em sua
+máquina. O arquivo `id_ed25519.pub` serviu somente para o cadastro na VM.
+O login dela pela CAMG/VPN ainda deve ser testado externamente.
+
 ## Conectar pelo Git Bash
 
 O Git Bash deve disponibilizar `ssh` e `connect`. Preencha as três variáveis
@@ -39,8 +47,8 @@ com seus dados autorizados. Use a chave privada em `ssh -i`; o arquivo
 ```bash
 (
   CAMG_PROXY_USER=SEU_USUARIO_CAMG
-  LAB_SSH_USER=SEU_USUARIO_LINUX_AUTORIZADO
-  LAB_SSH_KEY="$HOME/.ssh/SUA_CHAVE_PRIVADA"
+  LAB_SSH_USER=datamart-admin
+  LAB_SSH_KEY="$HOME/.ssh/id_ed25519"
 
   read -rsp 'Senha do proxy CAMG: ' HTTP_PROXY_PASSWORD
   printf '\n'

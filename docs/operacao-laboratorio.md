@@ -84,11 +84,11 @@ permanece com a senha do responsável.
 
 Siga o [procedimento SSH CAMG](acesso-ssh-camg.md). É necessário alcançar
 `proxycamg.prodemge.gov.br:8080`, usando sua autenticação corporativa.
-Na rede externa, conecte a VPN corporativa antes. A chave pública instalada
-é ED25519, fingerprint
-`SHA256:HDb9ELZoNI1Mp9R62k7A+TXw24yAF/jsobpZyB8ObLU`.
-Use a chave privada correspondente; cada destinatário pode instalar sua
-própria chave pública depois de entrar com o acesso autorizado.
+Na rede externa, conecte a VPN corporativa antes. A chave pública da
+destinatária foi autorizada em 24/11/2026: ED25519, fingerprint
+`SHA256:QovQRNOR9OGoAZJZzCrMyrsWvLa6p/+inpMWtiUhizk`.
+A chave anterior do responsável também foi preservada. A destinatária usa
+sua chave privada `id_ed25519`, mantida exclusivamente em sua máquina.
 
 No Git Bash, com `ssh` e `connect` disponíveis:
 

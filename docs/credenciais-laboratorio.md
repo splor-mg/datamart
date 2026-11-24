@@ -1,6 +1,7 @@
 # Senhas, chaves e tokens do laboratório Datamart
 
-Inventário da entrega, conferido em 23/11/2026. Esta página pode ser
+Inventário da entrega, conferido em 23/11/2026 e atualizado em 24/11/2026.
+Esta página pode ser
 compartilhada com o administrador do laboratório e seu agente de IA.
 Ela registra onde obter as credenciais; os valores ficam nos arquivos
 privados e nos ambientes dos serviços.
@@ -22,7 +23,7 @@ Os caminhos iniciados por `~` nesta tabela pertencem à conta Linux
 | Metabase por API/IA | API key administrativa, grupo `Administrators` | Na VM: `~/.config/datamart/metabase-api-key.json`. Também consta em `acessos.json`. |
 | PostgreSQL analítico em cliente SQL | Usuário `postgres` e senha de superusuário | Na VM: `~/.config/datamart/postgres-admin.json`. As URIs completas estão em `acessos.json`. Use o túnel SSH descrito no guia. |
 | Giftless / Git LFS | JWT usado como senha pelo cliente LFS | O administrador gera pela VM com `lab-giftless-token`; não depende de uma senha fixa nem do login no painel. |
-| SSH da VM | Chave privada correspondente à pública autorizada | A chave pública fornecida pelo responsável já está autorizada para `datamart-admin`. Se o destinatário usar outra chave, o responsável deve instalar a pública dele antes da entrega. |
+| SSH da VM | Chave privada correspondente à pública autorizada | A chave pública enviada pela destinatária foi autorizada para `datamart-admin` em 24/11/2026, preservando a chave do responsável. A privada permanece na máquina da destinatária. |
 | Proxy CAMG e VPN corporativa | Credenciais corporativas do próprio destinatário | Devem estar disponíveis com o usuário. Não foram criadas nem armazenadas pela implantação do laboratório. |
 | Gestão pelo Easypanel CLI | Token administrativo da API dev | Na VM: `~/.config/easypanel/credentials.json`, perfil `datamart-lab`, usado pelo comando `lab-easypanel`. |
 
@@ -112,8 +113,8 @@ os arquivos privados de acesso.
 
 1. Os links desta página e do [guia de operação](operacao-laboratorio.md).
 2. E-mail e senha Metabase, por canal privado.
-3. Acesso SSH com a chave pública do destinatário autorizada. O destinatário
-   mantém sua própria chave privada; ela não deve ser enviada ao responsável.
+3. Acesso SSH: a chave pública da destinatária já está autorizada. Ela mantém
+   sua própria chave privada; não deve enviá-la ao responsável.
 4. Confirmação de que o destinatário dispõe das credenciais corporativas
    e alcança o proxy CAMG, pela rede corporativa ou VPN.
 
