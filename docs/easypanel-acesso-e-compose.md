@@ -1,6 +1,7 @@
 # Acesso dos desenvolvedores e agrupamento dos serviços
 
-Decisões e implantação concluídas em 23/11/2026.
+Serviços configurados em 23/11/2026; chave da destinatária autorizada em
+24/11/2026, conforme o [guia SSH](acesso-ssh-camg.md).
 As fontes estão na [pesquisa](easypanel-acesso-contexto.md).
 
 O [guia de entrega e operação](operacao-laboratorio.md) reúne os endereços,
@@ -206,8 +207,9 @@ ou autenticação Git LFS.
 Em 23/11/2026, foi criada a role técnica `datamart`, proprietária do banco
 analítico, com login e acesso de leitura/escrita/criação no schema `public`.
 A autenticação TCP dessa role foi validada; o banco continuava com zero
-tabelas. Sua senha está somente no arquivo privado
-`/home/datamart-admin/.config/datamart/postgres-analytics.json`, modo 600.
+tabelas. Sua senha está no arquivo privado
+`/home/datamart-admin/.config/datamart/postgres-analytics.json` e na
+compilação `acessos.json`, ambos com modo 600 na mesma pasta.
 A sessão SSH administrativa permite usar o superusuário `postgres` para
 gerir a instância inteira, além dessa identidade técnica da conexão.
 As credenciais administrativas e as URIs para túnel SSH estão compiladas em

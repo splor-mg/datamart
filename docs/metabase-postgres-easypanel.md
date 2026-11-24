@@ -5,14 +5,16 @@ Metabase guarda usuários, perguntas, dashboards e configurações em um
 arquivo H2. O serviço pode iniciar assim, mas o Metabase recomenda
 PostgreSQL para o banco da aplicação em produção.
 
-A implantação escolhida usa os templates do Easypanel. É possível
-reutilizar o PostgreSQL que já está rodando: basta criar nele um banco e
-uma role exclusivos para o Metabase. Essa opção dispensa outro container.
-Para a preferência posterior de agrupar Metabase com seu próprio banco em
-um item Compose, veja o [guia de acesso e agrupamento](easypanel-acesso-e-compose.md)
-e o arquivo [compose.metabase.yaml](../compose.metabase.yaml).
-O restante deste documento descreve a opção de reutilizar o PostgreSQL
-existente, sem mudar o tipo do item no painel. Esse banco é separado dos dados
+**A implantação atual agrupa Metabase e seu próprio PostgreSQL no item
+`metabase-compose`.** Siga o [guia de operação](operacao-laboratorio.md),
+o [guia de acesso e agrupamento](easypanel-acesso-e-compose.md) e
+[compose.metabase.yaml](../compose.metabase.yaml).
+
+O restante deste documento descreve a alternativa anterior de reutilizar
+o PostgreSQL analítico que já está rodando: criar nele um banco e uma role
+exclusivos para o Metabase, sem outro container nem alteração do tipo do
+item no painel. Essa alternativa não foi a configuração final entregue.
+Nessa opção, o banco da aplicação é separado dos dados
 orçamentários que serão cadastrados como fonte analítica na interface.
 
 As variáveis abaixo são para o **template / imagem oficial**. O
